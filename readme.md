@@ -1,6 +1,6 @@
 # Feathers Schema
 
-A comman schema definition format for JavaScript and TypeScript that can target different formats like
+A common schema definition format for JavaScript and TypeScript that can target different formats like
 
 - JSON schema
 - GraphQL
