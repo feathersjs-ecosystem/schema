@@ -1,0 +1,1 @@
+# @feathersjs/schema
