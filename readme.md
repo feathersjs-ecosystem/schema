@@ -1,5 +1,7 @@
 # Feathers Schema
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/feathersjs/schema.svg)](https://greenkeeper.io/)
+
 A common schema definition format for JavaScript and TypeScript that can target different formats like
 
 - JSON schema
