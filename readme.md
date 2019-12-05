@@ -14,17 +14,19 @@ A common schema definition format for JavaScript and TypeScript that can target 
 ### JavaScript
 
 ```js
-const { setSchema } = require('@feathersjs/schema');
+const { schema } = require('@feathersjs/schema');
 
 class User {}
 
-setSchema(User, {
+schema(User, {
+  name: 'user'
+}, {
   id: {
-    type: Number
+    type: Joi.number().integer()
   },
   email: {
-    description: 'The user email',
-    type: String
+    type: Joi.string().email().required(),
+    description: 'The user email'
   },
   firstName: {
     type: String
@@ -48,15 +50,14 @@ setSchema(User, {
   }
 });
 
-class Todo {}
-
-setSchema(Todo, {
+const Todo = schema({
+  name: 'todo'
+}, {
   text: {
     type: String
   },
   completed: {
-    type: Boolean,
-    defaultValue: false
+    type: Boolean
   },
   userId: {
     type: Number
@@ -77,14 +78,17 @@ setSchema(Todo, {
 Schemas can be declared using decorators
 
 ```ts
-const { property } = require('@feathersjs/schema');
+const { property, schema, Type } = require('@feathersjs/schema');
 
+@schema({
+  name: 'users'
+})
 class User {
   @property()
   id: number;
 
   @property({
-    description: 'The user email'
+    type: Type.string().email().required()
   })
   email: string;
 
@@ -114,9 +118,7 @@ class Todo {
   @property()
   text: string;
 
-  @property({
-    defaultValue: false
-  })
+  @property()
   completed: boolean;
 
   @property()
