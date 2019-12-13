@@ -1,5 +1,5 @@
 import { strict as assert } from 'assert';
-import { schema, Type, validate } from '../src';
+import { schema, Type, validate, getSchema } from '../src';
 
 describe('@feathersjs/schema', () => {
   it('simple schema and validation', async () => {
@@ -34,22 +34,20 @@ describe('@feathersjs/schema', () => {
     }), {
       message: '"email" must be a valid email'
     });
+
+    assert.equal(getSchema('users'), User, 'getSchema with name');
   });
 
   it('schema on target', async () => {
     class Tester {}
 
-    schema(Tester, {
-      name: 'test'
-    }, {
+    schema(Tester, {}, {
       age: {
         type: Number
       }
     });
 
-    const Related = schema({
-      name: 'related-test'
-    }, {
+    const Related = schema({}, {
       test: {
         type: Tester
       }
@@ -68,16 +66,12 @@ describe('@feathersjs/schema', () => {
   });
 
   it('related schemas and validation', async () => {
-    const Todo = schema({
-      name: 'todo'
-    }, {
+    const Todo = schema({}, {
       text: {
         type: Type.string().required()
       }
     });
-    const User = schema({
-      name: 'users'
-    }, {
+    const User = schema({}, {
       age: {
         type: Type.number().required().integer()
       },

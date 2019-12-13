@@ -17,9 +17,9 @@ export function validate (data: any, target: any) {
   return schema.validate(data);
 }
 
-export function schema (schemaMeta: SchemaMeta, schemaProperties: SchemaProperties): Schema;
-export function schema (target: any, schemaMeta: SchemaMeta, schemaProperties: SchemaProperties): Schema;
-export function schema (schemaMeta: SchemaMeta): (target: any) => void;
+export function schema (schemaMeta: Partial<SchemaMeta>, schemaProperties: SchemaProperties): Schema;
+export function schema (target: any, schemaMeta: Partial<SchemaMeta>, schemaProperties: SchemaProperties): Schema;
+export function schema (schemaMeta: Partial<SchemaMeta>): (target: any) => void;
 export function schema (...args: any[]) {
   if (args.length === 1) {
     return schemaDecorator(args[0]);
