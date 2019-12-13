@@ -5,7 +5,10 @@ import { SchemaMeta } from './core';
 
 export type TypeInitializer<T> = (type: T) => T;
 
-export function propertyDecorator<T extends AnySchema = Joi.AnySchema> (definition: Partial<SchemaPropertyDefinition>|TypeInitializer<T> = {}) {
+export function propertyDecorator<T extends AnySchema = Joi.AnySchema> (
+  definition: Partial<SchemaPropertyDefinition>|TypeInitializer<T> = {},
+  propDef: Partial<SchemaPropertyDefinition> = {}
+) {
   return (target: any, propertyName: string) => {
     const type = Reflect.getMetadata('design:type', target, propertyName);
     const targetSchema = getSchema(target) || schema(target, {}, {});
@@ -13,7 +16,8 @@ export function propertyDecorator<T extends AnySchema = Joi.AnySchema> (definiti
     if (typeof definition === 'function') {
       targetSchema.addProperties({
         [propertyName]: {
-          type: definition(validatorFromType(type) as T)
+          type: definition(validatorFromType(type) as T),
+          ...propDef
         }
       });
     } else {

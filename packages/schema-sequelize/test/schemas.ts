@@ -1,8 +1,3 @@
-# @feathersjs/schema-sequelize
-
-Sequelize converter for `@feathersjs/schema` schemas:
-
-```js
 import Joi from '@hapi/joi';
 import { schema, property } from '@feathersjs/schema';
 
@@ -20,9 +15,6 @@ export class User {
 
   @property<Joi.StringSchema> (validator => validator.email().required())
   email: string;
-
-  @property<Joi.NumberSchema> (validator => validator.integer())
-  age: number;
 }
 
 @schema({
@@ -39,7 +31,7 @@ export class Todo {
     }
   })
   id: number;
-  
+
   @property(validator => validator.required())
   text: string;
 
@@ -58,16 +50,3 @@ export class Todo {
   })
   user: User;
 }
-
-const client = new Sequelize('sqlite://test-db.sqlite');
-
-const UserModel = convert (User, client);
-const TodoModel = convert(Todo, client);
-
-associate(client);
-
-await client.sync();
-
-assert.ok(UserModel);
-assert.ok(TodoModel);
-```

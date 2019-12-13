@@ -23,6 +23,7 @@ export interface SchemaPropertyDefinition {
 
 export interface SchemaMeta {
   name: string;
+  [key: string]: any;
 }
 
 export interface SchemaProperties {
@@ -66,10 +67,10 @@ export class Schema {
   validator: Joi.ObjectSchema;
 
   constructor (schemaMeta: Partial<SchemaMeta>, schemaProperties: SchemaProperties) {
+    this.properties = {};
     this.meta = {
       name: `schema-${++id}`
     };
-    this.properties = {};
 
     this.addMetadata(schemaMeta);
     this.addProperties(schemaProperties);
@@ -87,21 +88,19 @@ export class Schema {
   }
 
   addMetadata (schemaMeta: Partial<SchemaMeta>) {
+    const oldName = this.meta.name;
+
     this.meta = Object.assign(this.meta, schemaMeta);
+
+    delete nameMap[oldName];
+    nameMap[this.meta.name] = this;
 
     return this;
   }
 }
 
 export function setSchema (schema: Schema, target: any) {
-  const { name } = schema.meta;
-
-  if (nameMap[name]) {
-    throw new Error(`Schema with name '${name}' already exists`);
-  }
-
   typeMap.set(target !== null ? target : schema, schema);
-  nameMap[name] = schema;
 
   return schema;
 }
