@@ -8,7 +8,7 @@ describe('@feathersjs/schema decorator', () => {
       name: 'todo'
     })
     class Todo {
-      @property(validator => validator.required())
+      @property(validator => validator.required(), {})
       text: string;
     }
 
