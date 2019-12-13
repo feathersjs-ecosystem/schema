@@ -3,6 +3,7 @@ import Joi from '@hapi/joi';
 export const Type = Joi;
 
 export const typeMap = new WeakMap<any, any>();
+export const nameMap: { [key: string]: Schema } = {};
 
 export let id = 0;
 
@@ -16,18 +17,19 @@ export type SchemaPropertyType = SchemaTypes|SchemaTypes[]|Function;
 
 export interface SchemaPropertyDefinition {
   type: SchemaPropertyType;
+  resolve?: <T = any, C = any> (entity: T, context: C) => any;
   [key: string]: any;
 }
 
 export interface SchemaMeta {
-  name?: string;
+  name: string;
 }
 
 export interface SchemaProperties {
   [key: string]: SchemaPropertyDefinition;
 }
 
-const validatorFromType = (type: Schema|SchemaPropertyType|(() => Joi.AnySchema)): Joi.AnySchema => {
+export const validatorFromType = (type: Schema|SchemaPropertyType|(() => Joi.AnySchema)): Joi.AnySchema => {
   const value = typeMap.get(type) || type;
 
   if (Array.isArray(value) && value.length === 1) {
@@ -63,7 +65,7 @@ export class Schema {
   properties: SchemaProperties;
   validator: Joi.ObjectSchema;
 
-  constructor (schemaMeta: SchemaMeta, schemaProperties: SchemaProperties) {
+  constructor (schemaMeta: Partial<SchemaMeta>, schemaProperties: SchemaProperties) {
     this.meta = {
       name: `schema-${++id}`
     };
@@ -84,7 +86,7 @@ export class Schema {
     return this;
   }
 
-  addMetadata (schemaMeta: SchemaMeta) {
+  addMetadata (schemaMeta: Partial<SchemaMeta>) {
     this.meta = Object.assign(this.meta, schemaMeta);
 
     return this;
@@ -92,7 +94,14 @@ export class Schema {
 }
 
 export function setSchema (schema: Schema, target: any) {
+  const { name } = schema.meta;
+
+  if (nameMap[name]) {
+    throw new Error(`Schema with name '${name}' already exists`);
+  }
+
   typeMap.set(target !== null ? target : schema, schema);
+  nameMap[name] = schema;
 
   return schema;
 }
@@ -100,6 +109,10 @@ export function setSchema (schema: Schema, target: any) {
 export function getSchema (target: any): Schema|null {
   if (target instanceof Schema) {
     return target;
+  }
+
+  if (typeof target ===  'string') {
+    return nameMap[target] || null;
   }
 
   let p = target;

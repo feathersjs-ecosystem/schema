@@ -14,18 +14,16 @@ A common schema definition format for JavaScript and TypeScript that can target 
 ### JavaScript
 
 ```js
-const { schema } = require('@feathersjs/schema');
+const { schema, Type } = require('@feathersjs/schema');
 
-class User {}
-
-schema(User, {
+const User = schema({
   name: 'user'
 }, {
   id: {
-    type: Joi.number().integer()
+    type: Type.number().integer()
   },
   email: {
-    type: Joi.string().email().required(),
+    type: Type.string().email().required(),
     description: 'The user email'
   },
   firstName: {
@@ -35,7 +33,7 @@ schema(User, {
     type: String
   },
   todos: {
-    type: [ Todo ],
+    type: [ 'todo' ], // Use schema name to get around circular dependencies
     async resolve (user, context) {
       const { params: { query = {} }, app } = context;
 
@@ -63,7 +61,7 @@ const Todo = schema({
     type: Number
   },
   user: {
-    type: User,
+    type: User, // Can use direct reference here
     resolve: async (todo, context) => {
       const { params, app } = context;
 
@@ -87,9 +85,7 @@ class User {
   @property()
   id: number;
 
-  @property({
-    type: Type.string().email().required()
-  })
+  @property(validator => validator.email().required())
   email: string;
 
   @property()
@@ -99,6 +95,7 @@ class User {
   lastName: string;
 
   @property({
+    type: [ 'todos' ], // Reference by schema name
     resolve: async (user, context) => {
       const { params: { query = {} }, app } = context;
 
@@ -114,6 +111,9 @@ class User {
   todos: Todo[];
 }
 
+@schema({
+  name: 'todos'
+})
 class Todo {
   @property()
   text: string;
@@ -121,7 +121,7 @@ class Todo {
   @property()
   completed: boolean;
 
-  @property()
+  @property(validator => validator.required())
   userId: User['id'];
   
   @property({
@@ -132,21 +132,5 @@ class Todo {
     }
   })
   user: User;
-}
-```
-
-
-
-```ts
-@hooks([
-  useSchema('data', userSchema)
-])
-class MyService {
-  @hooks([
-    useSchema('params.query', querySchema)
-  ])
-  find(params) {
-
-  }
 }
 ```

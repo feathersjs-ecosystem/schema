@@ -1,10 +1,10 @@
 import { strict as assert } from 'assert';
 import { schema, Type, resolve } from '../src';
 
-describe('@feathersjs/schemar resolvers', () => {
-  it('simple schema resolving', async () => {
+describe('@feathersjs/schema resolvers', () => {
+  it('general schema resolvin, avoids circular dependencies', async () => {
     const User = schema({
-      name: 'users'
+      name: 'resolve-users'
     }, {
       id: {
         type: Number
@@ -14,11 +14,17 @@ describe('@feathersjs/schemar resolvers', () => {
       },
       email: {
         type: Type.string().email().required()
+      },
+      todos: {
+        type: [ 'resolve-todos' ],
+        async resolve (user: any, ctx: any) {
+          return ctx.todos.filter((todo: any) => todo.userId === user.id);
+        }
       }
     });
 
     const Todo = schema({
-      name: 'todo'
+      name: 'resolve-todos'
     }, {
       text: {
         type: Type.string().required()
@@ -45,18 +51,37 @@ describe('@feathersjs/schemar resolvers', () => {
         id: 15,
         name: 'Joe',
         email: 'joe@example.com'
+      }],
+      todos: [{
+        text: 'My todo',
+        userId: 15
+      }, {
+        text: 'My other todo',
+        userId: 12
       }]
     };
-    const todo = {
-      text: 'My todo',
-      userId: 15
-    };
-    const resolved = await resolve(todo, Todo, ctx);
+    const todo = ctx.todos[0];
+    const resolvedTodo = await resolve(todo, Todo, ctx);
 
-    assert.deepEqual(resolved, {
+    assert.deepEqual(resolvedTodo, {
       text: 'My todo',
       userId: 15,
-      user: { id: 15, name: 'Joe', email: 'joe@example.com' }
+      user: {
+        id: 15,
+        name: 'Joe',
+        email: 'joe@example.com',
+        todos: [ ctx.todos[0] ]
+      }
+    });
+
+    const user = ctx.users[0];
+    const resolvedUser = await resolve(user, User, ctx, [ Todo.properties.user ]);
+
+    assert.deepEqual(resolvedUser, {
+      id: 12,
+      name: 'Dave',
+      email: 'dave@example.com',
+      todos: [ ctx.todos[1] ]
     });
   });
 });

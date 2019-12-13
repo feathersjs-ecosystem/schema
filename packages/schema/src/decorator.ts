@@ -1,18 +1,29 @@
 import 'reflect-metadata';
-import { getSchema, schema, SchemaPropertyDefinition } from './index';
+import Joi, { AnySchema } from '@hapi/joi';
+import { getSchema, schema, SchemaPropertyDefinition, validatorFromType } from './index';
 import { SchemaMeta } from './core';
 
-export function propertyDecorator (definition: Partial<SchemaPropertyDefinition> = {}) {
+export type TypeInitializer<T> = (type: T) => T;
+
+export function propertyDecorator<T extends AnySchema = Joi.AnySchema> (definition: Partial<SchemaPropertyDefinition>|TypeInitializer<T> = {}) {
   return (target: any, propertyName: string) => {
     const type = Reflect.getMetadata('design:type', target, propertyName);
     const targetSchema = getSchema(target) || schema(target, {}, {});
 
-    targetSchema.addProperties({
-      [propertyName]: {
-        type,
-        ...definition
-      }
-    });
+    if (typeof definition === 'function') {
+      targetSchema.addProperties({
+        [propertyName]: {
+          type: definition(validatorFromType(type) as T)
+        }
+      });
+    } else {
+      targetSchema.addProperties({
+        [propertyName]: {
+          type,
+          ...definition
+        }
+      });
+    }
   };
 }
 

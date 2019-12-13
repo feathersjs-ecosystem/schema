@@ -1,5 +1,6 @@
-import { Type, property, validate, schema, getSchema } from '../src';
+import { property, validate, schema, getSchema } from '../src';
 import { strict as assert } from 'assert';
+import Joi = require('@hapi/joi');
 
 describe('@feathersjs/schema decorator', () => {
   it('initializes with property decorators', async () => {
@@ -7,9 +8,7 @@ describe('@feathersjs/schema decorator', () => {
       name: 'todo'
     })
     class Todo {
-      @property({
-        type: Type.string().required()
-      })
+      @property(validator => validator.required())
       text: string;
     }
 
@@ -17,7 +16,7 @@ describe('@feathersjs/schema decorator', () => {
       name: 'test'
     })
     class Test {
-      @property()
+      @property<Joi.NumberSchema> (validator => validator.integer())
       age: number;
 
       @property()
