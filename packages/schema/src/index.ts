@@ -1,4 +1,4 @@
-import { SchemaMeta, SchemaProperties, Schema, setSchema, getSchema } from './core';
+import { SchemaMeta, SchemaProperties, Schema, setSchema } from './core';
 import { schemaDecorator, propertyDecorator } from './decorator';
 
 export * from './core';
@@ -6,16 +6,6 @@ export * from './decorator';
 export * from './resolve';
 
 export const property = propertyDecorator;
-
-export function validate (data: any, target: any) {
-  const schema = getSchema(target);
-
-  if (schema === null) {
-    throw new Error('Invalid schema');
-  }
-
-  return schema.validate(data);
-}
 
 export function schema (schemaMeta: Partial<SchemaMeta>, schemaProperties: SchemaProperties): Schema;
 export function schema (target: any, schemaMeta: Partial<SchemaMeta>, schemaProperties: SchemaProperties): Schema;

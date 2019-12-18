@@ -1,4 +1,4 @@
-import { property, validate, schema, getSchema } from '../src';
+import { property, schema, getSchema } from '../src';
 import { strict as assert } from 'assert';
 import Joi = require('@hapi/joi');
 
@@ -31,12 +31,12 @@ describe('@feathersjs/schema decorator', () => {
       name: 'test'
     });
 
-    const validated = await validate({
+    const validated = await getSchema(Test).validate({
       age: '2134',
       todo: {
         text: 'testing'
       }
-    }, Test);
+    });
 
     assert.deepEqual(validated, {
       age: 2134,

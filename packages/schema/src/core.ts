@@ -17,7 +17,6 @@ export type SchemaPropertyType = SchemaTypes|SchemaTypes[]|Function;
 
 export interface SchemaPropertyDefinition {
   type: SchemaPropertyType;
-  resolve?: <T = any, C = any> (entity: T, context: C) => any;
   [key: string]: any;
 }
 
