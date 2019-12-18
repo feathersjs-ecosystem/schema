@@ -1,5 +1,5 @@
 import { strict as assert } from 'assert';
-import { schema, Type, validate, getSchema } from '../src';
+import { schema, Type, getSchema } from '../src';
 
 describe('@feathersjs/schema', () => {
   it('simple schema and validation', async () => {
@@ -58,9 +58,9 @@ describe('@feathersjs/schema', () => {
     });
 
     assert.deepEqual(validated, { test: { age: 444 } });
-    assert.deepEqual(await validate({
+    assert.deepEqual(await getSchema(Tester).validate({
       age: '123'
-    }, Tester), {
+    }), {
       age: 123
     });
   });

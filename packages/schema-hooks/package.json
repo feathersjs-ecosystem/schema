@@ -1,0 +1,58 @@
+{
+  "name": "@feathersjs/schema-hooks",
+  "version": "0.0.1-alpha.1",
+  "description": "Feathers hooks to use with @feathersjs/schema",
+  "homepage": "https://feathersjs.com",
+  "keywords": [
+    "feathers"
+  ],
+  "license": "MIT",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/feathers"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/feathersjs/schema.git"
+  },
+  "author": {
+    "name": "Feathers contributor",
+    "email": "hello@feathersjs.com",
+    "url": "https://feathersjs.com"
+  },
+  "contributors": [],
+  "bugs": {
+    "url": "https://github.com/feathersjs/schema/issues"
+  },
+  "engines": {
+    "node": ">= 12"
+  },
+  "main": "lib/",
+  "types": "lib/",
+  "scripts": {
+    "prepublish": "npm run compile",
+    "compile": "shx rm -rf lib/ && tsc",
+    "test": "npm run compile && npm run mocha",
+    "mocha": "mocha --opts ../../mocha.opts --recursive test/**.test.ts test/**/*.test.ts"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@feathersjs/feathers": "^4.4.3",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.7.12",
+    "feathers-memory": "^4.1.0",
+    "mocha": "^6.2.1",
+    "shx": "^0.3.2",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.4"
+  },
+  "dependencies": {
+    "@feathersjs/errors": "^4.4.3",
+    "@feathersjs/schema": "^0.0.1-alpha.1"
+  }
+}
