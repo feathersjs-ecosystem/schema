@@ -3,7 +3,9 @@
     "default": {
       "packages": [
         "package.json",
-        "packages/schema/package.json"
+        "packages/schema/package.json",
+        "packages/schema-hooks/package.json",
+        "packages/schema-sequelize/package.json"
       ]
     }
   }
