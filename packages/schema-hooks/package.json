@@ -44,7 +44,7 @@
   "devDependencies": {
     "@feathersjs/feathers": "^4.4.3",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.7.12",
+    "@types/node": "^13.1.6",
     "feathers-memory": "^4.1.0",
     "mocha": "^6.2.1",
     "shx": "^0.3.2",
