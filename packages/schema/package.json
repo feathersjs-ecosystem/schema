@@ -42,7 +42,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@hapi/joi": "^16.1.8",
+    "@hapi/joi": "^17.0.2",
     "@types/hapi__joi": "^16.0.3",
     "reflect-metadata": "^0.1.13"
   },
