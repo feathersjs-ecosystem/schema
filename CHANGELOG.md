@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.3](https://github.com/feathersjs/schema/compare/v0.0.1-alpha.2...v0.0.1-alpha.3) (2020-01-14)
+
+
+### Bug Fixes
+
+* Allow to always override Sequelize type ([#11](https://github.com/feathersjs/schema/issues/11)) ([f29ed19](https://github.com/feathersjs/schema/commit/f29ed191c9ffe27d4a8539dfe4d53c6f0dfac7f6))
+* **package:** update @hapi/joi to version 17.0.2 ([#10](https://github.com/feathersjs/schema/issues/10)) ([cfcfbd0](https://github.com/feathersjs/schema/commit/cfcfbd0fd2f26751e72a74b1363fcbc05458975a))
+
+
+
+
+
 ## [0.0.1-alpha.2](https://github.com/feathersjs/schema/compare/v0.0.1-alpha.1...v0.0.1-alpha.2) (2019-12-18)
 
 
