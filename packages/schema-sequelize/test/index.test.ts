@@ -25,7 +25,8 @@ describe('@feathersjs/schema-sequelize', () => {
     });
     const todo = await TodoModel.create({
       text: 'Test todo',
-      userId: user.id
+      userId: user.id,
+      valid: 'custom type'
     });
 
     const resolvedTodo: any = await resolve(todo.toJSON(), Todo, client.models);
@@ -33,5 +34,6 @@ describe('@feathersjs/schema-sequelize', () => {
     assert.ok(resolvedTodo.id);
     assert.ok(resolvedTodo.user);
     assert.equal(resolvedTodo.user.email, 'dave@test.com');
+    assert.equal(resolvedTodo.valid, 'custom type');
   });
 });

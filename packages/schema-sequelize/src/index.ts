@@ -14,13 +14,13 @@ const processFlag: { [key: string]: (value: any) => any } = {
 
 export function convertProperty (description: Joi.Description, propDef: SchemaPropertyDefinition) {
   const type = typeMap[description.type];
+  const { sequelize = null } = propDef;
 
   if (!type) {
-    return null;
+    return sequelize;
   }
 
   const { flags = {}, rules = [] } = description;
-  const { sequelize = {} } = propDef;
 
   const withFlags = Object.keys(flags).reduce((result, key) => {
     const value = (flags as any)[key];
