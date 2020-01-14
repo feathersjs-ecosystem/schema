@@ -1,5 +1,6 @@
 import Joi from '@hapi/joi';
 import { schema, property } from '@feathersjs/schema';
+import Sequelize from 'sequelize';
 
 @schema({
   name: 'users'
@@ -37,6 +38,11 @@ export class Todo {
 
   @property()
   userId: number;
+
+  @property({
+    sequelize: { type: Sequelize.DataTypes.STRING }
+  })
+  valid: boolean;
 
   @property({
     async resolve (todo: any, context: any) {
