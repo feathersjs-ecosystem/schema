@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.5](https://github.com/feathersjs/schema/compare/v0.0.1-alpha.4...v0.0.1-alpha.5) (2020-02-08)
+
+
+### Bug Fixes
+
+* **schema-hooks:** Do not try to resolve if there is no schema ([#15](https://github.com/feathersjs/schema/issues/15)) ([0c51fa2](https://github.com/feathersjs/schema/commit/0c51fa29f6488bec7712b841c58db298c527e285))
+
+
+
+
+
 ## [0.0.1-alpha.4](https://github.com/feathersjs/schema/compare/v0.0.1-alpha.3...v0.0.1-alpha.4) (2020-02-08)
 
 
