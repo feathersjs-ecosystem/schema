@@ -1,6 +1,6 @@
 {
   "name": "@feathersjs/schema-hooks",
-  "version": "0.0.1-alpha.2",
+  "version": "0.0.1-alpha.4",
   "description": "Feathers hooks to use with @feathersjs/schema",
   "homepage": "https://feathersjs.com",
   "keywords": [
@@ -53,6 +53,6 @@
   },
   "dependencies": {
     "@feathersjs/errors": "^4.4.3",
-    "@feathersjs/schema": "^0.0.1-alpha.2"
+    "@feathersjs/schema": "^0.0.1-alpha.4"
   }
 }
