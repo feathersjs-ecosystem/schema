@@ -36,6 +36,7 @@ describe('@feathersjs/schema', () => {
     });
 
     assert.equal(getSchema('users'), User, 'getSchema with name');
+    assert.equal(getSchema(null), null);
   });
 
   it('schema on target', async () => {
