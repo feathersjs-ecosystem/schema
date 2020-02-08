@@ -16,7 +16,11 @@ describe('@feathersjs/schema-hooks', () => {
     })).use('/todos', memory({
       // @ts-ignore
       Schema: Todo
-    }));
+    })).use('/dummy', {
+      async get (id: string) {
+        return { id };
+      }
+    });
 
     app.hooks({
       before: validateSchema(),
@@ -74,6 +78,12 @@ describe('@feathersjs/schema-hooks', () => {
         id: 0,
         user
       });
+    });
+
+    it('works on service without schema', async () => {
+      const test = await app.service('dummy').get('test');
+
+      assert.deepEqual(test, { id: 'test' });
     });
   });
 });
