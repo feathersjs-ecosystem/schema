@@ -109,8 +109,12 @@ export function getSchema (target: any): Schema|null {
     return target;
   }
 
-  if (typeof target ===  'string') {
+  if (typeof target === 'string') {
     return nameMap[target] || null;
+  }
+
+  if (!target) {
+    return null;
   }
 
   let p = target;

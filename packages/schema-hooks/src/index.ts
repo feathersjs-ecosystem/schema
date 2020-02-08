@@ -18,7 +18,7 @@ export const validateSchema = (options?: any) => {
     const { service, data } = context;
     const schema = getSchema(service?.options?.Schema || service.Schema);
 
-    if (data) {
+    if (schema && data) {
       try {
         context.data = await schema.validate(data, {
           abortEarly: false,
