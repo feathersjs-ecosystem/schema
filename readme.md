@@ -1,6 +1,6 @@
 # Feathers Schema
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/feathersjs/schema.svg)](https://greenkeeper.io/)
+[![CI](https://github.com/feathersjs/schema/workflows/CI/badge.svg)](https://github.com/feathersjs/schema/actions?query=workflow%3ACI)
 
 A common schema definition format for JavaScript and TypeScript that can target different formats like
 
