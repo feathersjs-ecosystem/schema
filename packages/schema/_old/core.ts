@@ -1,38 +1,36 @@
-export interface SchemaMeta {
-  name: string;
-  [key: string]: any;
-}
-
-export interface SchemaPropertyMeta {
-  key: string;
-}
-
-export type SchemaFunction<T = any, O = any, C = any> =
-  ((value: any, object: O, context: C, meta: SchemaPropertyMeta)
-  => Promise<T>|T) & {
-    toJSON? (): any;
-  };
-
-export interface SchemaProperty {
-  type: (next?: SchemaFunction) => SchemaFunction;
-  value?: SchemaFunction;
-  resolve?: SchemaFunction;
-}
-
-export interface SchemaProperties {
-  [key: string]: SchemaProperty;
-}
-
 export const typeMap = new WeakMap<any, any>();
 export const nameMap: { [key: string]: Schema } = {};
 
 export let id = 0;
 
+typeMap.set(String, Joi.string());
+typeMap.set(Number, Joi.number());
+typeMap.set(Boolean, Joi.boolean());
+
+export type SchemaTypes = Schema|string|Joi.AnySchema|typeof String|typeof Number|typeof Boolean;
+// tslint:disable-next-line:ban-types
+export type SchemaPropertyType = SchemaTypes|SchemaTypes[]|Function;
+
+export interface SchemaPropertyDefinition {
+  type: SchemaPropertyType;
+  [key: string]: any;
+}
+
+export interface SchemaMeta {
+  name: string;
+  [key: string]: any;
+}
+
+export interface SchemaProperties {
+  [key: string]: SchemaPropertyDefinition;
+}
+
 export class Schema {
   meta: SchemaMeta;
-  properties: SchemaProperties = {};
+  properties: SchemaProperties;
 
   constructor (schemaMeta: Partial<SchemaMeta>, schemaProperties: SchemaProperties) {
+    this.properties = {};
     this.meta = {
       name: `schema-${++id}`
     };
@@ -56,28 +54,6 @@ export class Schema {
     nameMap[this.meta.name] = this;
 
     return this;
-  }
-
-  async value<C> (obj: any, context: C) {
-    const keys = Object.keys(this.properties);
-    const results = await Promise.all(keys.map(async name => {
-      const { type, value } = this.properties[name];
-      const schemaFn = type(value);
-
-      return schemaFn(obj[name], obj, context, {
-        key: name
-      });
-    }));
-    
-    return results.reduce((data, res, index) => {
-      const key = keys[index];
-
-      if (res !== undefined) {
-        data[key] = res;
-      }
-
-      return data;
-    }, {});
   }
 }
 

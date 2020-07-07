@@ -20,6 +20,58 @@ const User = schema({
   name: 'user'
 }, {
   id: {
+    type: string,
+    value: required()
+  },
+  tags: {
+    type: array(),
+    value: string()
+  },
+  email: {
+    type: string(),
+    value: required(email(async (value, user, context, metadata) => {
+
+    })),
+    resolve (value, user, context) {
+      if (context.params.provider) {
+        return undefined;
+      }
+
+      return value;
+    },
+    description: 'The user email',
+  },
+  firstName: {
+    type: Type.string()
+  },
+  lastName: {
+    type: Type.string()
+  },
+  todo: {
+    type: references('todo')
+  },
+  todos: {
+    type: array(references('todo')),
+    value: array(ref('todo')),
+    type: [ 'todo' ], // Use schema name to get around circular dependencies
+    async resolve (user, context) {
+      const { params: { query = {} }, app } = context;
+
+      return app.service('todos').find({
+        paginate: false,
+        query: {
+          ...query,
+          userId: user.id
+        }
+      });
+    }
+  }
+});
+
+const User = schema({
+  name: 'user'
+}, {
+  id: {
     type: Type.number().integer()
   },
   email: {
@@ -27,13 +79,14 @@ const User = schema({
     description: 'The user email'
   },
   firstName: {
-    type: String
+    type: Type.string()
   },
   lastName: {
-    type: String
+    type: Type.string()
   },
   todos: {
-    type: [ 'todo' ], // Use schema name to get around circular dependencies
+    value: ref('todo'),
+    // type: [ 'todo' ], // Use schema name to get around circular dependencies
     async resolve (user, context) {
       const { params: { query = {} }, app } = context;
 
@@ -52,7 +105,13 @@ const Todo = schema({
   name: 'todo'
 }, {
   text: {
-    type: String
+    type: 'string',
+    async value (value, todo, context) {
+
+    },
+    async resolve (value, todo, context) {
+
+    }
   },
   completed: {
     type: Boolean
@@ -82,10 +141,10 @@ const { property, schema, Type } = require('@feathersjs/schema');
   name: 'users'
 })
 class User {
-  @property()
+  @property(integer())
   id: number;
 
-  @property(validator => validator.email().required())
+  @property(required(email()))
   email: string;
 
   @property()
@@ -95,8 +154,8 @@ class User {
   lastName: string;
 
   @property({
-    type: [ 'todos' ], // Reference by schema name
-    resolve: async (user, context) => {
+    value: references('todos'),
+    resolve: async (value, user, context) => {
       const { params: { query = {} }, app } = context;
 
       return app.service('todos').find({
@@ -115,13 +174,13 @@ class User {
   name: 'todos'
 })
 class Todo {
-  @property()
+  @property(value => value(required(), regex(/fdjskl/)))
   text: string;
 
-  @property()
+  @property(value => value(default(false)))
   completed: boolean;
 
-  @property(validator => validator.required())
+  @property(validator => validator(required()))
   userId: User['id'];
   
   @property({

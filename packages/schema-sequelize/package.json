@@ -34,7 +34,7 @@
     "compile": "shx rm -rf lib/ && tsc",
     "clean": "shx rm -f test-db.sqlite",
     "test": "npm run compile && npm run clean && npm run mocha",
-    "mocha": "mocha --opts ../../mocha.opts --recursive test/**.test.ts test/**/*.test.ts"
+    "mocha": "mocha --recursive test/**.test.ts test/**/*.test.ts"
   },
   "directories": {
     "lib": "lib"

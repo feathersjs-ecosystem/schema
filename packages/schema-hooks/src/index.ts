@@ -41,10 +41,10 @@ export const resolveSchema = () => {
     const { result, method, service } = context;
     const schema = getSchema(service?.options?.Schema || service.Schema || service);
 
-    if(schema === null) {
+    if (schema === null) {
       return context;
     }
-    
+
     if (method === 'find' && result.data) {
       context.result.data = await resolve(result.data, schema, context);
     } else {

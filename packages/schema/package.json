@@ -33,7 +33,7 @@
     "prepublish": "npm run compile",
     "compile": "shx rm -rf lib/ && tsc",
     "test": "npm run compile && npm run mocha",
-    "mocha": "mocha --opts ../../mocha.opts --recursive test/**.test.ts test/**/*.test.ts"
+    "mocha": "mocha --recursive test/**.test.ts test/**/*.test.ts"
   },
   "directories": {
     "lib": "lib"
@@ -42,8 +42,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@hapi/joi": "^17.0.2",
-    "@types/hapi__joi": "^16.0.3",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {

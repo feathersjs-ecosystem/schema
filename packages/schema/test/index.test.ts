@@ -1,27 +1,46 @@
 import { strict as assert } from 'assert';
-import { schema, Type, getSchema } from '../src';
+import { schema, string, number, boolean, getSchema, array, SchemaProperties } from '../src';
 
 describe('@feathersjs/schema', () => {
-  it('simple schema and validation', async () => {
-    const User = schema({
+  it('simple schema and types', async () => {
+    const properties: SchemaProperties = {
+      email: {
+        type: string()
+      },
+      age: {
+        type: number()
+      },
+      enabled: {
+        type: boolean()
+      }
+    };
+
+    // const x: Type = string;
+    // type Props = {
+    //   [m in keyof (typeof properties)]: (typeof properties)[m]['type']
+    // };
+    const UserSchema = schema({
       name: 'users'
     }, {
       email: {
-        type: Type.string().email().required()
+        type: string()
       },
       age: {
-        type: Number
+        type: number()
       },
       enabled: {
-        type: Boolean
+        type: boolean()
       }
+      // todo: {
+        // type: ref<Todo> ('todo')
+      // }
     });
 
-    const validated = await User.validate({
+    const validated = await UserSchema.value({
       age: '33',
       enabled: 'false',
       email: 'someone@somewhere.com'
-    });
+    }, {});
 
     assert.deepEqual(validated, {
       age: 33,
@@ -29,68 +48,7 @@ describe('@feathersjs/schema', () => {
       email: 'someone@somewhere.com'
     });
 
-    await assert.rejects(() => User.validate({
-      email: 'Here'
-    }), {
-      message: '"email" must be a valid email'
-    });
-
-    assert.equal(getSchema('users'), User, 'getSchema with name');
+    assert.equal(getSchema('users'), UserSchema, 'getSchema with name');
     assert.equal(getSchema(null), null);
-  });
-
-  it('schema on target', async () => {
-    class Tester {}
-
-    schema(Tester, {}, {
-      age: {
-        type: Number
-      }
-    });
-
-    const Related = schema({}, {
-      test: {
-        type: Tester
-      }
-    });
-
-    const validated = await Related.validate({
-      test: { age: '444' }
-    });
-
-    assert.deepEqual(validated, { test: { age: 444 } });
-    assert.deepEqual(await getSchema(Tester).validate({
-      age: '123'
-    }), {
-      age: 123
-    });
-  });
-
-  it('related schemas and validation', async () => {
-    const Todo = schema({}, {
-      text: {
-        type: Type.string().required()
-      }
-    });
-    const User = schema({}, {
-      age: {
-        type: Type.number().required().integer()
-      },
-      todos: {
-        type: [ Todo ]
-      }
-    });
-
-    const validated = await User.validate({
-      age: '23',
-      todos: [{
-        text: 'Hello'
-      }]
-    });
-
-    assert.deepEqual(validated, {
-      age: 23,
-      todos: [ { text: 'Hello' } ]
-    });
   });
 });

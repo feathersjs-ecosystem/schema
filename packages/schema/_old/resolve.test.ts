@@ -2,7 +2,7 @@ import { strict as assert } from 'assert';
 import { schema, Type, resolve } from '../src';
 
 describe('@feathersjs/schema resolvers', () => {
-  it('general schema resolvin, avoids circular dependencies', async () => {
+  it('general schema resolving, avoids circular dependencies', async () => {
     const User = schema({
       name: 'resolve-users'
     }, {
