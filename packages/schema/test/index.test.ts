@@ -1,96 +1,68 @@
 import { strict as assert } from 'assert';
-import { schema, Type, getSchema } from '../src';
+import { CoreSchema, Infer } from '../src';
 
 describe('@feathersjs/schema', () => {
-  it('simple schema and validation', async () => {
-    const User = schema({
-      name: 'users'
-    }, {
-      email: {
-        type: Type.string().email().required()
-      },
-      age: {
-        type: Number
-      },
-      enabled: {
-        type: Boolean
+  describe('SchemaResolver', () => {
+    type Todo = {
+      name: string;
+    };
+
+    const UserSchema = new CoreSchema({
+      id: 'user',
+      properties: {
+        lastName: { type: 'string' },
+        active: { type: 'boolean' },
+        age: {
+          type: 'integer',
+          async validate<T> (value: any, user: T) {
+            const parsed = parseInt(value, 10);
+
+            if (isNaN(parsed) || parsed < 0) {
+              throw new Error('Invalid age');
+            }
+
+            return parsed;
+          }
+        },
+        password: {
+          type: 'string'
+        },
+        todos: {
+          type: 'array',
+          items: { $ref: '#todo' },
+          resolve: async (value, user, context) => {
+            return context.app.service('todos').find({
+              paginate: false,
+              query: { userId: user.id }
+            }) as Todo[];
+          }
+        }
       }
     });
+    
+    type User = Infer<typeof UserSchema>;
 
-    const validated = await User.validate({
-      age: '33',
-      enabled: 'false',
-      email: 'someone@somewhere.com'
+    it('basic resolving', async () => {
+      const resolved: User = await UserSchema.resolve({
+        name: 'Dave',
+        age: '333'
+      }, {}, {});
+
+      assert.deepEqual(resolved, {
+        name: 'Dave',
+        age: 333
+      });
     });
 
-    assert.deepEqual(validated, {
-      age: 33,
-      enabled: false,
-      email: 'someone@somewhere.com'
-    });
-
-    await assert.rejects(() => User.validate({
-      email: 'Here'
-    }), {
-      message: '"email" must be a valid email'
-    });
-
-    assert.equal(getSchema('users'), User, 'getSchema with name');
-    assert.equal(getSchema(null), null);
-  });
-
-  it('schema on target', async () => {
-    class Tester {}
-
-    schema(Tester, {}, {
-      age: {
-        type: Number
+    it('resolving with errors', async () => {
+      try {
+        await UserSchema.resolve({
+          name: 'Davester'
+        }, {}, {});
+        assert.fail('Should never get here');
+      } catch (error) {
+        console.log(error);
       }
-    });
-
-    const Related = schema({}, {
-      test: {
-        type: Tester
-      }
-    });
-
-    const validated = await Related.validate({
-      test: { age: '444' }
-    });
-
-    assert.deepEqual(validated, { test: { age: 444 } });
-    assert.deepEqual(await getSchema(Tester).validate({
-      age: '123'
-    }), {
-      age: 123
-    });
-  });
-
-  it('related schemas and validation', async () => {
-    const Todo = schema({}, {
-      text: {
-        type: Type.string().required()
-      }
-    });
-    const User = schema({}, {
-      age: {
-        type: Type.number().required().integer()
-      },
-      todos: {
-        type: [ Todo ]
-      }
-    });
-
-    const validated = await User.validate({
-      age: '23',
-      todos: [{
-        text: 'Hello'
-      }]
-    });
-
-    assert.deepEqual(validated, {
-      age: 23,
-      todos: [ { text: 'Hello' } ]
     });
   });
 });

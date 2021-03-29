@@ -4,9 +4,9 @@
 
 A common schema definition format for JavaScript and TypeScript that can target different formats like
 
+- TypeScript types
 - JSON schema
 - GraphQL
-- Mongoose
 - Sequelize
 
 ## Example
@@ -14,7 +14,54 @@ A common schema definition format for JavaScript and TypeScript that can target 
 ### JavaScript
 
 ```js
-const { schema, Type } = require('@feathersjs/schema');
+const { schema, resolver } = require('@feathersjs/schema');
+
+const User = schema({
+  id: 'user',
+  properties: {
+    email: { type: 'string' },
+    firstName: { type: 'string' },
+    lastName: { type: 'string' },
+    fullName: { type: 'string' },
+    age: { type: 'integer' }
+  }
+}).addValidator({
+  email: async (email, user, context, metadata) => {
+    if (typeof email !== 'string') {
+      throw new ValidationError('Email is required');
+    }
+
+    return email;
+  }
+}).addResolver({
+  fullName: async (value, user, context, metadata) => {
+    return `${user.firstName} ${user.lastName}`;
+  }
+});
+
+const yupSchema = yup.object({
+  email: yup.string().email().required(),
+  age: yup.number().required().positive().integer()
+});
+
+schema(yup(yupSchema), {
+  $id: 'user',
+  properties: {
+    email: {
+      resolve: async (email, user, context, metadata) => {
+  
+      }
+    }
+  }
+});
+
+const UserData = schema({
+  email: {
+    resolve: async (email, user, context, meta) => {
+
+    }
+  }
+});
 
 const User = schema({
   name: 'user'
