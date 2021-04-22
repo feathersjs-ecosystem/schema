@@ -1,5 +1,7 @@
 # Feathers Schema
 
+> __Note:__ Development for this module has been moved to [feathersjs/feathers](https://github.com/feathersjs/feathers)
+
 [![CI](https://github.com/feathersjs/schema/workflows/CI/badge.svg)](https://github.com/feathersjs/schema/actions?query=workflow%3ACI)
 
 A common schema definition format for JavaScript and TypeScript that can target different formats like
