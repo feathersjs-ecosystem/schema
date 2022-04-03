@@ -1,6 +1,6 @@
 # Feathers Schema
 
-> __Note:__ Development for this module has been moved to [feathersjs/feathers](https://github.com/feathersjs/feathers)
+> __Note:__ Development for this module has been moved to [feathersjs/feathers](https://github.com/feathersjs/feathers). See the [documentation](https://dove.docs.feathersjs.com/api/schema/) for usage information.
 
 [![CI](https://github.com/feathersjs/schema/workflows/CI/badge.svg)](https://github.com/feathersjs/schema/actions?query=workflow%3ACI)
 
